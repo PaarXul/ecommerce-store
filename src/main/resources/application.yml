@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: ecomerce
+  datasource:
+    url: jdbc:mysql://itnovai-test.czny55quvxhk.us-east-1.rds.amazonaws.com:3306/itnovai_test?allowPublicKeyRetrieval=true&useSSL=false
+    username: itnovai_test
+    password: itnovai_test
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        connection:
+          driver_class: com.mysql.cj.jdbc.Driver
+        jdbc:
+          time_zone: America/Santiago
+          lob:
+            non_contextual_creation: true
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+    cl:
+      sri:
+        sis: DEBUG
+  pattern:
+    dateformat: hh:mm:ss
