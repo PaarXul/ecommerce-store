@@ -15,7 +15,6 @@ public class PageableUtil {
         if (page == null || size == null) {
             throw new CustomException("El número de página y el tamaño de la página no pueden estar vacíos");
         }
-
         if (order.equals("asc")) {
             return PageRequest.of(page, size, Sort.by(column.toLowerCase()).ascending());
         } else if (order.equals("desc")) {

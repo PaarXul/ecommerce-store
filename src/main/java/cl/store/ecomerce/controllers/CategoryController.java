@@ -18,13 +18,11 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-
     @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-    // Funcion para obtener todas las categorias
     @GetMapping("/") // OK
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(categoryService.getCategories());

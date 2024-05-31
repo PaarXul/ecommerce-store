@@ -1,13 +1,20 @@
 package cl.store.ecomerce.controllers;
 
-
 import cl.store.ecomerce.config.exceptions.CustomException;
+import cl.store.ecomerce.config.utils.PageableUtil;
 import cl.store.ecomerce.model.Product;
 import cl.store.ecomerce.services.ProductService;
+import cl.store.ecomerce.specifications.ProductSpecification;
+import cl.store.ecomerce.specifications.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/products")
@@ -15,24 +22,33 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final PagedResourcesAssembler<Product> assembler;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, PagedResourcesAssembler<Product> assembler) {
         this.productService = productService;
+        this.assembler = assembler;
     }
 
-    // Funcion para obtener todos los productos
     @GetMapping("/")
-    public ResponseEntity<Page<Product>> obtenerTablas (
-            @RequestParam(value = "find", required = false) String find,
-            @RequestParam(value = "order", defaultValue = "asc") String order,
+    public ResponseEntity<PagedModel<EntityModel<Product>>> obtenerTablas (
+            @RequestParam Map<String, String> searchParams,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "column", defaultValue = "id") String column,
-            @RequestParam(value = "size", defaultValue = "5") Integer size) throws CustomException {
-        return ResponseEntity.ok(getTableParams(find, order, page, column, size));
-    }
+            @RequestParam(value = "size", defaultValue = "5") Integer size,
+            @RequestParam(value = "order", required = false) String order,
+            @RequestParam(value = "column", required = false) String column
+            ) throws CustomException {
 
-    private Page<Product> getTableParams(String find, String order, Integer page, String column, Integer size) throws CustomException {
-        return productService.getProducts(find, order, column, page, size);
+        ProductSpecification spec = new ProductSpecification();
+        for (Map.Entry<String, String> entry : searchParams.entrySet()) {
+            if (!entry.getKey().equals("page") && !entry.getKey().equals("size") && !entry.getKey().equals("column") && !entry.getKey().equals("order")) {
+                spec.add(new SearchCriteria(entry.getKey(), ":", entry.getValue()));
+            }
+        }
+
+        Pageable pageable = PageableUtil.createPageable(page, size, order, column);
+        Page<Product> productPage = productService.getProducts(spec, pageable);
+        PagedModel<EntityModel<Product>> collModel = assembler.toModel(productPage);
+        return ResponseEntity.ok(collModel);
     }
 }

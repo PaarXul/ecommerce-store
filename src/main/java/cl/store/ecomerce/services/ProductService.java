@@ -3,9 +3,11 @@ package cl.store.ecomerce.services;
 import cl.store.ecomerce.config.exceptions.CustomException;
 import cl.store.ecomerce.model.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface ProductService {
 
-    Page<Product> getProducts(String find, String order, String column, Integer page, Integer size) throws CustomException;
+    Page<Product> getProducts(Specification<Product> spec, Pageable pageable) throws CustomException;
 
 }
