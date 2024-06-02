@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -24,4 +26,9 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getProducts(Specification<Product> spec, Pageable pageable) throws CustomException {
         return productRepository.findAll(spec, pageable);
     }
+
+    public List<String> getColumnsProduct() {
+        return productRepository.getColumns();
+    }
+
 }

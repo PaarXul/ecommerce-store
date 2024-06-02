@@ -14,6 +14,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,8 +37,8 @@ public class ProductController {
             @RequestParam Map<String, String> searchParams,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "5") Integer size,
-            @RequestParam(value = "order", required = false) String order,
-            @RequestParam(value = "column", required = false) String column
+            @RequestParam(value = "order", defaultValue = "asc") String order,
+            @RequestParam(value = "column", defaultValue = "id") String column
             ) throws CustomException {
 
         ProductSpecification spec = new ProductSpecification();
@@ -50,5 +52,10 @@ public class ProductController {
         Page<Product> productPage = productService.getProducts(spec, pageable);
         PagedModel<EntityModel<Product>> collModel = assembler.toModel(productPage);
         return ResponseEntity.ok(collModel);
+    }
+
+    @GetMapping("/columns")
+    public ResponseEntity<List<String>> getColumnsProduct() {
+        return ResponseEntity.ok(productService.getColumnsProduct());
     }
 }

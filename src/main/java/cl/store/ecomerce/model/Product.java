@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-
 @Table(name = "product")
 public class Product {
 
@@ -22,7 +21,7 @@ public class Product {
     private float price;
     private int discount;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "category")
     private Category category;
 }

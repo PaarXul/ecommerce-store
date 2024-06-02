@@ -6,8 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
+
 public interface ProductService {
 
     Page<Product> getProducts(Specification<Product> spec, Pageable pageable) throws CustomException;
+
+    List<String> getColumnsProduct();
 
 }
