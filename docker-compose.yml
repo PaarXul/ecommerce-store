@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  java_apps:
+    container_name: java_apps
+    image: java-app:1.0.0
+    build: .
+    tty: true
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
